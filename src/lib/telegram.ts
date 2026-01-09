@@ -23,24 +23,30 @@ export const sendTelegramMessage = async (message: string) => {
 
 export const formatOrderMessage = (order: any) => {
     const itemsList = order.items.map((item: any) =>
-        `• ${item.title} (x${item.quantity}) - ₹${item.price.toLocaleString()}`
-    ).join('\n');
+        `🔹 <b>${item.title}</b>\n   └ <i>Qty: ${item.quantity} • ₹${item.price.toLocaleString()}</i>`
+    ).join('\n\n');
+
+    const divider = "━━━━━━━━━━━━━━━━━━━━━━";
 
     return `
-<b>🚀 NEW ORDER PLACED!</b>
----------------------------
-<b>Order ID:</b> #${order.id}
-<b>Customer:</b> ${order.customerName}
-<b>Phone:</b> ${order.customerPhone}
-<b>Address:</b> ${order.customerAddress}
+✨ <b>NEW ORDER RECEIVED!</b> ✨
+${divider}
 
-<b>Products:</b>
+🆔 <b>Order ID:</b> <code>${order.id}</code>
+👤 <b>Customer:</b> <code>${order.customerName}</code>
+📞 <b>Phone:</b> <code>${order.customerPhone}</code>
+📍 <b>Address:</b> <code>${order.customerAddress}</code>
+
+📦 <b>ITEMS ORDERED:</b>
 ${itemsList}
 
-<b>Total Amount:</b> ₹${order.total.toLocaleString()}
-<b>Payment Method:</b> ${order.paymentMethod}
-<b>Status:</b> ${order.status}
----------------------------
-<i>Check Admin Dashboard for details.</i>
+${divider}
+💰 <b>TOTAL AMOUNT:</b> <b>₹${order.total.toLocaleString()}</b>
+💳 <b>PAYMENT:</b> <code>${order.paymentMethod}</code>
+⚡ <b>STATUS:</b> <code>${order.status}</code>
+${divider}
+
+🚀 <b>Bytecore Cloud Sync Active</b>
+<i>Login to Admin Panel to manage this order.</i>
     `.trim();
 };
