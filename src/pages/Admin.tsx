@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Trash2, Plus, Package, Search, LayoutDashboard } from "lucide-react";
+import { Trash2, Plus, Package, Search, LayoutDashboard, ShoppingBag } from "lucide-react";
 import { motion } from "framer-motion";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/firebase";

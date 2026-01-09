@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ShoppingCart, Star, Heart } from "lucide-react";
+import { ShoppingCart, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Product } from "@/data/products";
 

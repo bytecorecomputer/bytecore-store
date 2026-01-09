@@ -1,4 +1,4 @@
-import { Zap, Shield, Star, Award } from "lucide-react";
+// No unused icons needed
 
 // Importing images directly (Vite will handle the paths)
 import laptop1 from "@/assets/laptops/png1.png";
