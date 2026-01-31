@@ -1,14 +1,11 @@
-import { useRef } from "react";
+import { useRef, lazy, Suspense } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, TrendingUp, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, TrendingUp, Star, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { PRODUCTS } from "@/data/products";
 
-// Importing the 4 unique laptop PNGs
-import laptop1 from "@/assets/laptops/png1.png";
-import laptop2 from "@/assets/laptops/png2.png";
-import laptop3 from "@/assets/laptops/png3.png";
-import laptop4 from "@/assets/laptops/png4.png";
+// Lazy load the 3D scene for better performance
+const LaptopScene = lazy(() => import("@/components/ThreeD/LaptopScene"));
 
 export default function Home() {
     const navigate = useNavigate();
@@ -42,36 +39,22 @@ export default function Home() {
                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 contrast-150 mix-blend-overlay"></div>
                 </div>
 
-                {/* 2. Floating Laptops - High Performance Floating */}
-                <div className="absolute inset-0 z-10 pointer-events-none">
-                    <motion.img
-                        src={laptop1}
-                        animate={{ y: [0, -20, 0], rotate: [15, 12, 15] }}
-                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute top-[10%] left-[5%] w-[420px] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] opacity-70"
-                    />
-                    <motion.img
-                        src={laptop2}
-                        animate={{ y: [0, 25, 0], rotate: [-15, -18, -15] }}
-                        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                        className="absolute top-[5%] right-[2%] w-[450px] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] opacity-80"
-                    />
-                    <motion.img
-                        src={laptop3}
-                        animate={{ y: [0, -15, 0] }}
-                        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                        className="absolute bottom-[10%] left-[8%] w-[380px] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] opacity-80"
-                    />
-                    <motion.img
-                        src={laptop4}
-                        animate={{ y: [0, 20, 0] }}
-                        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-                        className="absolute bottom-[8%] right-[5%] w-[400px] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] opacity-70"
-                    />
+                {/* 2. 3D Laptop Scene - High Impact */}
+                <div className="absolute inset-0 z-10">
+                    <Suspense fallback={
+                        <div className="w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                            <div className="flex flex-col items-center gap-4">
+                                <Loader2 className="w-12 h-12 text-primary animate-spin" />
+                                <span className="text-white/50 font-medium tracking-[0.2em] uppercase text-xs">Initializing 3D Environment</span>
+                            </div>
+                        </div>
+                    }>
+                        <LaptopScene />
+                    </Suspense>
                 </div>
 
                 {/* 3. Main Content - High-Level Impact */}
-                <div className="container relative z-30 px-4 text-center">
+                <div className="container relative z-30 px-4 text-center pointer-events-none">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -93,28 +76,30 @@ export default function Home() {
                             </h1>
                         </div>
 
-                        <p className="max-w-xl mx-auto text-lg md:text-xl text-gray-400 font-medium leading-relaxed glass-premium p-8 rounded-[2rem] border-white/5 shadow-2xl">
-                            The world's most powerful machines at <span className="text-white">unbeatable prices</span>.
-                            Fully inspected and ready for your next big project.
-                        </p>
+                        <div className="pointer-events-auto">
+                            <p className="max-w-xl mx-auto text-lg md:text-xl text-gray-400 font-medium leading-relaxed glass-premium p-8 rounded-[2rem] border-white/5 shadow-2xl mb-8">
+                                The world's most powerful machines at <span className="text-white">unbeatable prices</span>.
+                                Fully inspected and ready for your next big project.
+                            </p>
 
-                        {/* Best-in-Class CTAs */}
-                        <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                            <button
-                                onClick={() => navigate('/shop')}
-                                className="group relative px-16 py-6 bg-white text-black font-black text-xs uppercase tracking-[0.3em] rounded-2xl overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(255,255,255,0.1)]"
-                            >
-                                <span className="relative z-10 flex items-center gap-3">
-                                    Explore Collection <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                </span>
-                            </button>
+                            {/* Best-in-Class CTAs */}
+                            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+                                <button
+                                    onClick={() => navigate('/shop')}
+                                    className="group relative px-16 py-6 bg-white text-black font-black text-xs uppercase tracking-[0.3em] rounded-2xl overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(255,255,255,0.1)]"
+                                >
+                                    <span className="relative z-10 flex items-center gap-3">
+                                        Explore Collection <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                    </span>
+                                </button>
 
-                            <button
-                                onClick={() => navigate('/sell')}
-                                className="px-16 py-6 glass-premium text-white font-black text-xs uppercase tracking-[0.3em] rounded-2xl hover:bg-white/10 transition-all border border-white/10"
-                            >
-                                Sell Your Machine
-                            </button>
+                                <button
+                                    onClick={() => navigate('/sell')}
+                                    className="px-16 py-6 glass-premium text-white font-black text-xs uppercase tracking-[0.3em] rounded-2xl hover:bg-white/10 transition-all border border-white/10"
+                                >
+                                    Sell Your Machine
+                                </button>
+                            </div>
                         </div>
                     </motion.div>
                 </div>
@@ -128,6 +113,7 @@ export default function Home() {
                     <div className="w-[1px] h-12 bg-gradient-to-b from-white to-transparent" />
                 </motion.div>
             </section>
+
 
             {/* Improved Slider Section */}
             <section className="py-12 md:py-20 bg-background/50 border-y border-border/50">
