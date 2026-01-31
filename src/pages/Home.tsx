@@ -39,7 +39,7 @@ export default function Home() {
                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 contrast-150 mix-blend-overlay"></div>
                 </div>
 
-                {/* 2. 3D Laptop Scene - High Impact */}
+                {/* 2. 3D Laptop Scene - PRIMARY FOCUS */}
                 <div className="absolute inset-0 z-10">
                     <Suspense fallback={
                         <div className="w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm">
@@ -53,53 +53,50 @@ export default function Home() {
                     </Suspense>
                 </div>
 
-                {/* 3. Main Content - High-Level Impact */}
-                <div className="container relative z-30 px-4 text-center pointer-events-none">
+                {/* 3. Minimal Branding Overlay - Top Left */}
+                <div className="absolute top-8 left-8 z-30">
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="space-y-12"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                        className="flex items-center gap-3"
                     >
-                        {/* High-Level Title */}
-                        <div className="relative">
-                            <h1 className="text-[7rem] md:text-[14rem] font-black tracking-tighter leading-none text-white overflow-hidden inline-flex">
-                                <span className="relative inline-block group">
-                                    BYTE
-                                    <motion.span
-                                        className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-[30deg] pointer-events-none"
-                                        animate={{ left: ['-100%', '200%'] }}
-                                        transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
-                                    />
-                                </span>
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-purple-500 ml-2">CORE</span>
-                            </h1>
+                        <div className="text-3xl font-black tracking-tighter text-white">
+                            BYTE<span className="text-primary">CORE</span>
                         </div>
+                    </motion.div>
+                </div>
 
-                        <div className="pointer-events-auto">
-                            <p className="max-w-xl mx-auto text-lg md:text-xl text-gray-400 font-medium leading-relaxed glass-premium p-8 rounded-[2rem] border-white/5 shadow-2xl mb-8">
-                                The world's most powerful machines at <span className="text-white">unbeatable prices</span>.
-                                Fully inspected and ready for your next big project.
-                            </p>
+                {/* 4. Content Overlay - Bottom Center */}
+                <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30 w-full max-w-4xl px-4">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.5 }}
+                        className="text-center space-y-8"
+                    >
+                        {/* Subtitle */}
+                        <p className="text-white/70 text-sm md:text-base font-medium tracking-[0.2em] uppercase">
+                            Premium Refurbished Laptops
+                        </p>
 
-                            {/* Best-in-Class CTAs */}
-                            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                                <button
-                                    onClick={() => navigate('/shop')}
-                                    className="group relative px-16 py-6 bg-white text-black font-black text-xs uppercase tracking-[0.3em] rounded-2xl overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(255,255,255,0.1)]"
-                                >
-                                    <span className="relative z-10 flex items-center gap-3">
-                                        Explore Collection <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                    </span>
-                                </button>
+                        {/* CTAs */}
+                        <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+                            <button
+                                onClick={() => navigate('/shop')}
+                                className="group relative px-12 py-4 bg-white text-black font-bold text-xs uppercase tracking-[0.3em] rounded-xl overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(255,255,255,0.1)]"
+                            >
+                                <span className="relative z-10 flex items-center gap-3">
+                                    Explore Collection <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </span>
+                            </button>
 
-                                <button
-                                    onClick={() => navigate('/sell')}
-                                    className="px-16 py-6 glass-premium text-white font-black text-xs uppercase tracking-[0.3em] rounded-2xl hover:bg-white/10 transition-all border border-white/10"
-                                >
-                                    Sell Your Machine
-                                </button>
-                            </div>
+                            <button
+                                onClick={() => navigate('/sell')}
+                                className="px-12 py-4 backdrop-blur-md bg-white/5 text-white font-bold text-xs uppercase tracking-[0.3em] rounded-xl hover:bg-white/10 transition-all border border-white/10"
+                            >
+                                Sell Your Machine
+                            </button>
                         </div>
                     </motion.div>
                 </div>
@@ -108,11 +105,12 @@ export default function Home() {
                 <motion.div
                     animate={{ y: [0, 10, 0] }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-20"
+                    className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-20"
                 >
                     <div className="w-[1px] h-12 bg-gradient-to-b from-white to-transparent" />
                 </motion.div>
             </section>
+
 
 
             {/* Improved Slider Section */}
