@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { PRODUCTS } from "@/data/products";
 
 // Lazy load the 3D scene for better performance
-const LaptopScene = lazy(() => import("@/components/ThreeD/LaptopScene"));
+const Product3DScene = lazy(() => import("@/components/ThreeD/Product3DScene"));
 
 export default function Home() {
     const navigate = useNavigate();
@@ -49,7 +49,10 @@ export default function Home() {
                             </div>
                         </div>
                     }>
-                        <LaptopScene />
+                        <Product3DScene
+                            image="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=1200"
+                            isHero
+                        />
                     </Suspense>
                 </div>
 
@@ -142,13 +145,8 @@ export default function Home() {
                                 transition={{ duration: 0.3 }}
                             >
                                 <Link to={`/product/${product.id}`} className="group block bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-primary/10 transition-all h-full flex flex-col">
-                                    <div className="relative aspect-[4/3] bg-muted/20 p-4 md:p-6 flex items-center justify-center overflow-hidden">
-                                        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10" />
-                                        <img
-                                            src={product.image}
-                                            alt={product.title}
-                                            className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal group-hover:scale-110 transition-transform duration-500 z-0"
-                                        />
+                                    <div className="relative aspect-[4/3] bg-muted/20 flex items-center justify-center overflow-hidden">
+                                        <Product3DScene image={product.image} />
                                         <span className="absolute top-3 right-3 md:top-4 md:right-4 bg-background/80 backdrop-blur-md border border-border/50 px-2 py-1 rounded text-[10px] md:text-xs font-bold flex items-center gap-1 z-20">
                                             <Star className="w-3 h-3 text-yellow-500 fill-current" /> {product.rating}
                                         </span>

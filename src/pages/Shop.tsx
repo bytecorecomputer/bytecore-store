@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { PRODUCTS, CATEGORIES } from "@/data/products";
-import { Star, Search, X, SlidersHorizontal, Sparkles, Zap, ArrowRight, ShoppingCart } from "lucide-react";
+import { Star, Search, X, SlidersHorizontal, Sparkles, Zap, ArrowRight, ShoppingCart, Loader2 } from "lucide-react";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/contexts/CartContext";
+
+const Product3DScene = lazy(() => import("@/components/ThreeD/Product3DScene"));
 
 function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
     const { addToCart } = useCart();
@@ -52,12 +54,13 @@ function ProductCard({ product }: { product: typeof PRODUCTS[0] }) {
                     to={`/product/${product.id}`}
                     className="relative aspect-square bg-white/[0.02] flex items-center justify-center overflow-hidden"
                 >
-                    <motion.img
-                        layoutId={`product-image-${product.id}`}
-                        src={product.image}
-                        alt={product.title}
-                        className="w-[80%] h-[80%] object-contain p-4 group-hover:scale-110 transition-transform duration-700 select-none"
-                    />
+                    <Suspense fallback={
+                        <div className="w-full h-full flex items-center justify-center">
+                            <Loader2 className="w-8 h-8 animate-spin text-primary/40" />
+                        </div>
+                    }>
+                        <Product3DScene image={product.image} />
+                    </Suspense>
 
                     {/* Reflective Layer */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />

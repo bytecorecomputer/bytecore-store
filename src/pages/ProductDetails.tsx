@@ -1,11 +1,13 @@
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import { PRODUCTS } from "@/data/products";
-import { Star, Truck, ShieldCheck, ShoppingCart, ArrowLeft, Zap, Sparkles, CheckCircle2 } from "lucide-react";
+import { Star, Truck, ShieldCheck, ShoppingCart, ArrowLeft, Zap, Sparkles, CheckCircle2, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { cn } from "@/lib/utils";
+
+const Product3DScene = lazy(() => import("@/components/ThreeD/Product3DScene"));
 
 export default function ProductDetails() {
     const { id } = useParams();
@@ -62,12 +64,13 @@ export default function ProductDetails() {
                         <div className="absolute -inset-10 bg-primary/20 rounded-[4rem] blur-[120px] opacity-50 z-0" />
 
                         <div className="relative z-10 aspect-square rounded-[2.5rem] overflow-hidden bg-white/[0.02] border border-white/10 shadow-2xl group flex items-center justify-center">
-                            <motion.img
-                                layoutId={`product-image-${product.id}`}
-                                src={product.image}
-                                alt={product.title}
-                                className="w-[85%] h-[85%] object-contain p-8 group-hover:scale-110 transition-transform duration-1000"
-                            />
+                            <Suspense fallback={
+                                <div className="w-full h-full flex items-center justify-center">
+                                    <Loader2 className="w-12 h-12 animate-spin text-primary/40" />
+                                </div>
+                            }>
+                                <Product3DScene image={product.image} isHero />
+                            </Suspense>
 
                             {/* Reflective Overlay */}
                             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none" />

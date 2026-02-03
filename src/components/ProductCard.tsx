@@ -1,7 +1,10 @@
+import { lazy, Suspense } from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart, Heart } from "lucide-react";
+import { ShoppingCart, Heart, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Product } from "@/data/products";
+
+const Product3DScene = lazy(() => import("./ThreeD/Product3DScene"));
 
 interface ProductCardProps {
     product: Product;
@@ -30,14 +33,17 @@ export default function ProductCard({ product }: ProductCardProps) {
             </button>
 
             {/* Image Container */}
-            <div className="aspect-[4/3] overflow-hidden bg-muted relative">
-                <img
-                    src={product.image}
-                    alt={product.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+            <div className="aspect-[4/3] bg-muted relative overflow-hidden">
+                <Suspense fallback={
+                    <div className="w-full h-full flex items-center justify-center">
+                        <Loader2 className="w-6 h-6 animate-spin text-primary/40" />
+                    </div>
+                }>
+                    <Product3DScene image={product.image} />
+                </Suspense>
+
                 {/* Quick Overlay */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 z-20">
                     <Link to={`/product/${product.id}`} className="px-4 py-2 bg-white text-black rounded-full text-sm font-semibold transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-75">
                         View Details
                     </Link>
