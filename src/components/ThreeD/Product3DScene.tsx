@@ -19,23 +19,60 @@ class WebGLBoundary extends Component<{ children: ReactNode, fallback: ReactNode
     }
 }
 
-function LaptopModel({ screenImage }: { screenImage: string }) {
+function LaptopModel({ screenImage, isHero }: { screenImage: string, isHero: boolean }) {
     const laptop = useGLTF("https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/macbook/model.gltf");
     const modelRef = useRef<THREE.Group>(null);
+    const [lidTarget, setLidTarget] = useState(0);
+
+    useEffect(() => {
+        if (isHero) {
+            const timer = setTimeout(() => setLidTarget(-1.57), 500);
+            return () => clearTimeout(timer);
+        } else {
+            setLidTarget(-1.57);
+        }
+    }, [isHero]);
 
     useFrame((state) => {
-        if (modelRef.current) {
-            modelRef.current.rotation.y = THREE.MathUtils.lerp(modelRef.current.rotation.y, (state.mouse.x * Math.PI) / 6, 0.05);
-            modelRef.current.rotation.x = THREE.MathUtils.lerp(modelRef.current.rotation.x, (state.mouse.y * Math.PI) / 12, 0.05);
+        if (!modelRef.current) return;
+
+        // 1. Smooth Lid Opening
+        if (laptop.nodes.m_lid_2) {
+            const lid = laptop.nodes.m_lid_2 as THREE.Group;
+            lid.rotation.x = THREE.MathUtils.lerp(lid.rotation.x, lidTarget, 0.05);
         }
+
+        // 2. Surgical Mouse Tracking
+        const t = state.clock.getElapsedTime();
+        modelRef.current.rotation.y = THREE.MathUtils.lerp(
+            modelRef.current.rotation.y,
+            (state.mouse.x * Math.PI) / 6 + Math.cos(t / 2) * 0.05,
+            0.05
+        );
+        modelRef.current.rotation.x = THREE.MathUtils.lerp(
+            modelRef.current.rotation.x,
+            (state.mouse.y * Math.PI) / 12 + Math.sin(t / 2) * 0.02,
+            0.05
+        );
     });
 
     return (
         <primitive object={laptop.scene} ref={modelRef} position={[0, -1.2, 0]} scale={1.5}>
             <Html transform occlude distanceFactor={1.17} position={[0, 1.56, -1.4]} rotation-x={-0.256}>
-                <div className="w-[1024px] h-[670px] bg-black overflow-hidden rounded-lg flex items-center justify-center select-none relative">
-                    <img src={screenImage} className="w-full h-full object-cover opacity-80" alt="Screen content" />
-                    <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-white/5 pointer-events-none" />
+                <div className="w-[1024px] h-[670px] bg-black overflow-hidden rounded-lg flex items-center justify-center select-none relative group/screen">
+                    {/* Screen Image with Tech Overlays */}
+                    <img src={screenImage} className="w-full h-full object-cover opacity-80 transition-opacity duration-1000 group-hover/screen:opacity-100" alt="Screen content" />
+
+                    {/* Elite Tech Overlays */}
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 pointer-events-none bg-[length:100%_2px,3px_100%]" />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-white/5 pointer-events-none z-20" />
+
+                    {/* Animated Data Pulse */}
+                    <div className="absolute top-10 right-10 flex gap-2 z-30">
+                        {[0, 1, 2].map(i => (
+                            <div key={i} className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" style={{ animationDelay: `${i * 0.2}s` }} />
+                        ))}
+                    </div>
                 </div>
             </Html>
         </primitive>
@@ -121,14 +158,20 @@ export default function Product3DScene({ image, isHero = false }: Product3DScene
                                 floatingRange={[-0.1, 0.1]}
                                 speed={isHero ? 2 : 1}
                             >
-                                <spotLight position={[0, 10, 10]} angle={0.5} penumbra={1} intensity={50} castShadow shadow-bias={-0.0001} />
-                                <ambientLight intensity={0.5} />
+                                {/* Studio Lighting Rig */}
+                                <spotLight position={[5, 10, 5]} angle={0.3} penumbra={1} intensity={100} castShadow color="#ffffff" />
+                                <spotLight position={[-5, 5, 5]} angle={0.3} penumbra={1} intensity={50} color="#2563eb" />
+                                <rectAreaLight width={5} height={5} intensity={5} position={[0, 5, 0]} rotation={[-Math.PI / 2, 0, 0]} />
+
+                                <ambientLight intensity={0.4} />
+                                <pointLight position={[10, 10, 10]} intensity={20} color="#ffffff" />
                                 <pointLight position={[-10, -10, -10]} intensity={10} color="#2563eb" />
-                                <LaptopModel screenImage={image} />
+
+                                <LaptopModel screenImage={image} isHero={isHero} />
                             </Float>
                         </PresentationControls>
 
-                        <ContactShadows position={[0, -2.4, 0]} opacity={0.4} scale={10} blur={2.5} far={4} resolution={128} color="#000000" />
+                        <ContactShadows position={[0, -2.4, 0]} opacity={0.6} scale={12} blur={2} far={4} resolution={256} color="#000000" />
                         <Environment preset="city" />
                     </Suspense>
                 </Canvas>
